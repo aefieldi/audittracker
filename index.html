@@ -125,6 +125,9 @@ section{margin-bottom:22px}
 .s-foot{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
 .post textarea{width:100%;min-height:240px;background:var(--bg);color:var(--soft);border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit;font-size:14px;line-height:1.5;resize:vertical}
 .how{color:var(--muted);font-size:13.5px;margin-top:10px}
+.share{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding:16px 20px;border-radius:14px;background:linear-gradient(90deg,var(--vio),var(--lav));color:#fff;font-weight:700;font-size:16px;text-decoration:none;box-shadow:0 10px 30px rgba(124,92,240,.35)}
+.share span{font-weight:500;font-size:12.5px;opacity:.85}
+.share:hover{filter:brightness(1.06)}
 
 /* momentum */
 .mrow{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--soft);margin-bottom:14px}
@@ -191,6 +194,14 @@ footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);paddin
   </div>
   <div class="streak" aria-live="polite"><div class="n" id="streakN">0</div><div class="l">day streak<small id="streakBest">Best: 0</small></div></div>
 </header>
+
+<section>
+  <div class="sec-head"><h2>Your <em>momentum</em></h2><p class="hint" id="momSince"></p></div>
+  <div class="panel">
+    <div class="mrow" id="mrow"></div>
+    <div class="mos" id="mos"></div>
+  </div>
+</section>
 
 <div class="tabs" role="tablist">
   <button class="tab" role="tab" data-t="track" aria-selected="true">🔮 Daily tracker</button>
@@ -281,21 +292,15 @@ footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);paddin
         <div class="post">
           <div class="sub">Your check-in post</div>
           <textarea id="postText" readonly aria-label="Your check-in post"></textarea>
-          <div class="btns"><button class="btn mint" id="copyPost">Copy the post</button><a class="btn ghost" href="https://www.skool.com/amanda/the-official-audit-method-accountability-check-in-post?p=0bdee067" target="_blank" rel="noopener">Open the check-in post</a></div>
+          <div class="btns"><button class="btn mint" id="copyPost">Copy the post</button></div>
         </div>
-        <p class="how"><b>Then:</b> screenshot the card (Mac: Shift, Command, 4 and drag; phone: the two buttons, then crop), paste the post as a comment under the check-in post, and drop the screenshot in with it.</p>
+        <p class="how"><b>Then:</b> screenshot the card (Mac: Shift, Command, 4 and drag; phone: the two buttons, then crop), paste the post as a comment, and drop the screenshot in with it.</p>
       </div>
     </div>
+    <a class="share" id="sharePost" href="https://www.skool.com/amanda/the-official-audit-method-accountability-check-in-post?p=0bdee067" target="_blank" rel="noopener" hidden>📣 Share this under the official check-in post <span>opens Skool in a new tab</span></a>
   </div>
 </section>
 
-<section>
-  <div class="sec-head"><h2>Your <em>momentum</em></h2><p class="hint" id="momSince"></p></div>
-  <div class="panel">
-    <div class="mrow" id="mrow"></div>
-    <div class="mos" id="mos"></div>
-  </div>
-</section>
 
 <details id="startHere">
   <summary>🚀 Start here <span class="r" id="startPct">0 of 0 done</span></summary>
@@ -314,7 +319,7 @@ footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);paddin
   </div>
 </details>
 
-<div class="q"><span>💬</span><p style="margin:0"><b style="color:var(--txt)">Questions about today?</b> Drop it under the <a href="https://www.skool.com/amanda/the-official-audit-method-accountability-check-in-post?p=0bdee067" target="_blank" rel="noopener">check-in post</a> with your numbers, or under the <a href="https://www.skool.com/amanda/the-official-audit-method-questions-post?p=3724d25a" target="_blank" rel="noopener">official questions post</a> so it gets answered on the next call.</p></div>
+<div class="q"><span>💬</span><p style="margin:0"><b style="color:var(--txt)">Questions about today?</b> Drop it under the <a href="https://www.skool.com/amanda/the-official-audit-method-questions-post?p=3724d25a" target="_blank" rel="noopener">official questions post</a> so it gets answered on the next call.</p></div>
 
 <details class="backup" style="margin-top:12px">
   <summary>🗄️ Backup <span class="r">saves on this device only</span></summary>
@@ -456,7 +461,7 @@ footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);paddin
     dInputs.forEach(function(el){el.value=d[el.dataset.d]!==undefined?d[el.dataset.d]:''});
     typePills.forEach(function(p){p.setAttribute('aria-pressed',(d.types||[]).indexOf(p.textContent)>-1?'true':'false')});
     var dt=fromISO(k);$('ciDayLabel').textContent=(k===today?'Today, ':'')+SHORT[dt.getMonth()]+' '+dt.getDate()+' · day '+dayN(k)+' of your Audit Method';
-    if(S.days[k]){buildResult(k);$('result').hidden=false}else $('result').hidden=true;
+    if(S.days[k]){buildResult(k);$('result').hidden=false;$('sharePost').hidden=false}else{$('result').hidden=true;$('sharePost').hidden=true}
   }
   typePills.forEach(function(p){p.addEventListener('click',function(){p.setAttribute('aria-pressed',p.getAttribute('aria-pressed')==='true'?'false':'true')})});
   $('d-date').addEventListener('change',loadDay);
@@ -464,7 +469,7 @@ footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);paddin
     var k=$('d-date').value||today;if(k>today){toast('That day has not happened yet');return}
     var wasNew=!S.days[k],d={};dInputs.forEach(function(el){d[el.dataset.d]=el.value});
     d.types=typePills.filter(function(p){return p.getAttribute('aria-pressed')==='true'}).map(function(p){return p.textContent});
-    S.days[k]=d;save();renderAll();buildResult(k);$('result').hidden=false;$('result').scrollIntoView({behavior:'smooth',block:'start'});
+    S.days[k]=d;save();renderAll();buildResult(k);$('result').hidden=false;$('sharePost').hidden=false;$('result').scrollIntoView({behavior:'smooth',block:'start'});
     if(wasNew){confetti(170);toast('Day '+dayN(k)+' is green')}else toast('Updated');
   });
   $('clearDay').addEventListener('click',function(){var k=$('d-date').value||today;delete S.days[k];save();renderAll();loadDay();toast('Cleared')});
